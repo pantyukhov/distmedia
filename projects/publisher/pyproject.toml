@@ -12,8 +12,9 @@ environs = "^9.5.0"
 django-redis = "^5.2.0"
 psycopg2 = "^2.9.5"
 djangorestframework = "^3.14.0"
-python-mcs-sdk = "^0.2.11"
 djangorestframework-dataclasses = "^1.2.0"
+xrpl-py = "^1.7.0"
+wallet = "^2.1.525"
 
 [tool.poetry.dev-dependencies]
 
