@@ -1,0 +1,33 @@
+version: '3'
+
+
+services:
+  ipfs-node:
+    container_name: ipfs-node
+    image: ipfs/go-ipfs:latest
+    ports:
+      - 4001:4001 # ipfs swarm - expose if needed/wanted
+      - 5001:5001 # ipfs api - expose if needed/wanted
+      - 8080:8080 # ipfs gateway - expose if needed/wanted
+    networks:
+      - ipfs
+    volumes:
+      - ./data/ipfs:/data/ipfs
+      - ./data/ipfs-staging:/staging
+#  ipfs-cluster:
+#    container_name: ipfs-cluster
+#    image: ipfs/ipfs-cluster:latest
+#    networks:
+#      - ipfs
+#    environment:
+#      CLUSTER_MONITORPINGINTERVAL: 2s
+#    depends_on:
+#      -  ipfs-node
+#    ports:
+#      - "9094:9094"
+#      - "9096:9096" # Cluster IPFS Proxy endpoint
+#    volumes:
+#      - ./data/ipfs-cluster:/data/ipfs-cluster
+
+networks:
+  ipfs:
