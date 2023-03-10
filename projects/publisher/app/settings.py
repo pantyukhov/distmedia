@@ -1,3 +1,5 @@
+import base64
+import json
 import os
 
 import dj_database_url
@@ -38,6 +40,7 @@ INSTALLED_APPS = (
     "rest_framework",
 
     "apps.articles",
+    "apps.xrpl",
 )
 
 MIDDLEWARE = (
@@ -180,3 +183,6 @@ MCS_API_KEY = env.str("MCS_API_KEY")
 MCS_ACCESS_TOKEN = env.str("MCS_ACCESS_TOKEN")
 ONCHIN_PRIVATE_KEY = env.str("ONCHIN_PRIVATE_KEY")
 ONCHIN_RPC_ENDPOINT = env.str("ONCHIN_RPC_ENDPOINT", None) or "https://polygon-bor.publicnode.com"
+
+
+WALLET_CREDS = json.loads(base64.b64decode(env.str("WALLET_CREDS", "")))

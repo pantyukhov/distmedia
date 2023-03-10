@@ -14,7 +14,6 @@ def get_wallet(request) -> Optional[Account]:
         return data
 
     data = json.loads(base64.b64decode(data))
-
     return Account(**data)
 
 

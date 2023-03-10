@@ -1,12 +1,10 @@
-from abc import ABC
-
 from rest_framework import serializers
 from rest_framework_dataclasses.serializers import DataclassSerializer
 
-from apps.xrpl.dataclass.account import Account
+from apps.xrpl.dataclass.subscription import Subscription
 
 
-class CreateAccountSerializer(serializers.Serializer):
+class CreateSubscriptionSerializer(serializers.Serializer):
     def update(self, instance, validated_data):
         pass
 
@@ -14,6 +12,6 @@ class CreateAccountSerializer(serializers.Serializer):
         pass
 
 
-class AccountSerializer(DataclassSerializer):
+class SubscriptionSerializer(DataclassSerializer):
     class Meta:
-        dataclass = Account
+        dataclass = Subscription
