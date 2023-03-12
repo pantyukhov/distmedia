@@ -31,5 +31,7 @@ class SubscriptionViewSet(viewsets.ViewSet):
         return Response(xrpl_service.get_subscriptions(account=self.request.account_wallet))
 
     def create(self, request, *args, **kwargs):
-        subscription = xrpl_service.create_subscription(account=self.request.account_wallet)
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        subscription = xrpl_service.create_subscription(account=self.request.account_wallet, public_key=serializer.validated_data["public_key"])
         return Response(subscription, status=status.HTTP_201_CREATED)

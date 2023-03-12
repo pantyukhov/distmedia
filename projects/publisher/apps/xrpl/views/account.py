@@ -1,7 +1,9 @@
 from rest_framework import viewsets, status
+from rest_framework.decorators import action
 from rest_framework.mixins import CreateModelMixin
 from rest_framework.response import Response
 
+from apps.libs.encryption.keys import generate_keys
 from apps.xrpl.serializers import CreateAccountSerializer, AccountSerializer
 from apps.xrpl.service.xrpl import xrpl_service
 
@@ -34,3 +36,8 @@ class AccountViewSet(viewsets.ViewSet):
     def create(self, request, *args, **kwargs):
         account = xrpl_service.create_wallet()
         return Response(AccountSerializer(instance=account).data, status=status.HTTP_201_CREATED)
+
+    @action(detail=False, methods=['post'])
+    def generate_keys(self, request, pk=None):
+        private_key, public_key = generate_keys()
+        return Response({'private_key': private_key, "public_key": public_key})

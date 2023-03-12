@@ -1,8 +1,12 @@
+import json
+from binascii import hexlify
+
+import ipfsApi
 import xrpl
 from django.conf import settings
 from xrpl.clients import JsonRpcClient
-from xrpl.models import AccountNFTs, NFTokenCreateOffer, NFTBuyOffers, NFTokenCancelOffer, NFTokenAcceptOffer, \
-    NFTokenMint, NFTokenMintFlag, XRPLModelException
+from xrpl.models import AccountNFTs, NFTokenCreateOffer, NFTBuyOffers, NFTokenAcceptOffer, \
+    NFTokenMint, NFTokenMintFlag
 from xrpl.transaction import safe_sign_and_autofill_transaction, send_reliable_submission
 from xrpl.wallet import generate_faucet_wallet, Wallet
 
@@ -13,6 +17,7 @@ class XrplService:
     def __init__(self):
         JSON_RPC_URL = "https://s.altnet.rippletest.net:51234/"
         self.client = JsonRpcClient(JSON_RPC_URL)
+        self.ipfs_client = ipfsApi.Client(settings.IPFS_HOST, settings.IPFS_PORT)
 
     def create_wallet(self) -> Account:
         w: xrpl.wallet.Wallet = generate_faucet_wallet(self.client, debug=True)
@@ -23,42 +28,46 @@ class XrplService:
         seed = settings.WALLET_CREDS["seed"]
         return Wallet(seed=seed, sequence=0)
 
-    def generate_subscriptions(self, total_nfts=1):
+    def generate_subscriptions(self, public_key):
         issuer_wallet = self.get_superuser_waller()
 
         print(f"\nIssuer Account: {issuer_wallet.classic_address}")
-        print(f"          Seed: {issuer_wallet.seed}")
 
-        for i in range(0, total_nfts):
-            mint_tx = NFTokenMint(
-                account=issuer_wallet.classic_address,
-                nftoken_taxon=1,
-                flags=NFTokenMintFlag.TF_TRANSFERABLE
-            )
+        ipfs_address = self.ipfs_client.add_str(json.dumps({
+            "public_key": public_key,
+        }))
 
-            # Sign mint_tx using the issuer account
-            mint_tx_signed = safe_sign_and_autofill_transaction(transaction=mint_tx, wallet=issuer_wallet,
-                                                                client=xrpl_service.client)
-            mint_tx_signed = send_reliable_submission(transaction=mint_tx_signed, client=xrpl_service.client)
-            mint_tx_result = mint_tx_signed.result
+        uri = xrpl.utils.str_to_hex(f"ipfs://{ipfs_address}")
+        mint_tx = NFTokenMint(
+            account=issuer_wallet.classic_address,
+            nftoken_taxon=1,
+            flags=NFTokenMintFlag.TF_TRANSFERABLE,
+            uri=uri,
+        )
 
-            print(f"\n  Mint tx result: {mint_tx_result['meta']['TransactionResult']}")
-            print(f"     Tx response: {mint_tx_result}")
+        # Sign mint_tx using the issuer account
+        mint_tx_signed = safe_sign_and_autofill_transaction(transaction=mint_tx, wallet=issuer_wallet,
+                                                            client=xrpl_service.client)
+        mint_tx_signed = send_reliable_submission(transaction=mint_tx_signed, client=xrpl_service.client)
+        mint_tx_result = mint_tx_signed.result
 
-            for node in mint_tx_result['meta']['AffectedNodes']:
-                if "CreatedNode" in list(node.keys())[0]:
-                    print(f"\n - NFT metadata:"
-                          f"\n        NFT ID: {node['CreatedNode']['NewFields']['NFTokens'][0]['NFToken']['NFTokenID']}"
-                          f"\n  Raw metadata: {node}")
+        print(f"\n  Mint tx result: {mint_tx_result['meta']['TransactionResult']}")
+        print(f"     Tx response: {mint_tx_result}")
+
+        for node in mint_tx_result['meta']['AffectedNodes']:
+            if "CreatedNode" in list(node.keys())[0]:
+                print(f"\n - NFT metadata:"
+                      f"\n        NFT ID: {node['CreatedNode']['NewFields']['NFTokens'][0]['NFToken']['NFTokenID']}"
+                      f"\n  Raw metadata: {node}")
 
     def get_subscriptions(self, account: Account):
         issuerAddr = account.get_wallet().classic_address
         get_account_nfts = self.client.request(AccountNFTs(account=issuerAddr))
         return get_account_nfts.result['account_nfts']
 
-    def create_subscription(self, account: Account, amount: int = 10000000):
+    def create_subscription(self, account: Account, public_key: str, amount: int = 10000000):
 
-        self.generate_subscriptions()
+        self.generate_subscriptions(public_key)
         issuer_wallet = self.get_superuser_waller()
 
         issuerAddr = issuer_wallet.classic_address

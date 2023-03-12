@@ -5,6 +5,8 @@ from apps.xrpl.dataclass.subscription import Subscription
 
 
 class CreateSubscriptionSerializer(serializers.Serializer):
+    public_key = serializers.CharField()
+
     def update(self, instance, validated_data):
         pass
 
