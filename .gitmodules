@@ -1,3 +1,1 @@
-[submodule "projects/publisher/libs/py-libp2p"]
-	path = projects/publisher/libs/py-libp2p
-	url = https://github.com/libp2p/py-libp2p
+
