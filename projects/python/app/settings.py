@@ -186,6 +186,7 @@ ONCHIN_RPC_ENDPOINT = env.str("ONCHIN_RPC_ENDPOINT", None) or "https://polygon-b
 
 
 WALLET_CREDS = json.loads(base64.b64decode(env.str("WALLET_CREDS", "")))
+PUBLISHER_ENCRYPTION_CASE = json.loads(base64.b64decode(env.str("PUBLISHER_ENCRYPTION_CASE", "")))
 
 IPFS_HOST = env.str("IPFS_HOST", '127.0.0.1')
 IPFS_PORT = env.int("IPFS_PORT", 5001)

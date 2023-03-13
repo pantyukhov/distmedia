@@ -10,6 +10,7 @@ from xrpl.models import AccountNFTs, NFTokenCreateOffer, NFTBuyOffers, NFTokenAc
 from xrpl.transaction import safe_sign_and_autofill_transaction, send_reliable_submission
 from xrpl.wallet import generate_faucet_wallet, Wallet
 
+from apps.libs.encryption.keys import generate_keys
 from apps.xrpl.dataclass.account import Account
 
 
@@ -21,8 +22,7 @@ class XrplService:
 
     def create_wallet(self) -> Account:
         w: xrpl.wallet.Wallet = generate_faucet_wallet(self.client, debug=True)
-
-        return Account(w.public_key, w.private_key, w.classic_address, w.seed)
+        return Account(w.public_key, w.private_key, w.classic_address, w.seed, private_key, public_key)
 
     def get_superuser_waller(self) -> Wallet:
         seed = settings.WALLET_CREDS["seed"]
