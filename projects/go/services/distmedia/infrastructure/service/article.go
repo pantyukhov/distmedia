@@ -32,12 +32,16 @@ func NewArticleService(ctx context.Context, publisherConfig config.PublisherConf
 		panic(err)
 	}
 
-	room := publisherConfig.Address
-	topic, err := gossipSub.Join(room)
+	//room := publisherConfig.Address
+	topic, err := gossipSub.Join("1231232131")
 	if err != nil {
 		panic(err)
 	}
 
+	err = topic.Publish(context.Background(), []byte{})
+	if err != nil {
+		panic(err)
+	}
 	return &ArticleService{
 		topic: topic,
 	}

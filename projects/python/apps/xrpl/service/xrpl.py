@@ -22,7 +22,7 @@ class XrplService:
 
     def create_wallet(self) -> Account:
         w: xrpl.wallet.Wallet = generate_faucet_wallet(self.client, debug=True)
-        return Account(w.public_key, w.private_key, w.classic_address, w.seed, private_key, public_key)
+        return Account(w.public_key, w.private_key, w.classic_address, w.seed)
 
     def get_superuser_waller(self) -> Wallet:
         seed = settings.WALLET_CREDS["seed"]
