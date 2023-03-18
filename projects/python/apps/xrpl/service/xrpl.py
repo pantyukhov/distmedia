@@ -14,6 +14,7 @@ from xrpl.wallet import generate_faucet_wallet, Wallet
 from apps.libs.encryption.keys import generate_keys
 from apps.xrpl.dataclass.account import Account
 from apps.xrpl.service import REQUEST_SUBSCRIPTION_DROPS, USER_SUBSCRIPTION_DROPS
+from apps.xrpl.service.superuser_xrpl import super_user_xrpl_service
 
 
 class XrplService:
@@ -92,26 +93,7 @@ class XrplService:
         buy_tx_signed = send_reliable_submission(transaction=buy_tx_signed, client=self.client)
         buy_tx_result = buy_tx_signed.result
 
-        # TODO: Put it to worker
-        response_offers = self.client.request(
-            NFTBuyOffers(nft_id=response['NFTokenID'])
-        )
-
-        offer_objects = response_offers.result
-        first_offer_object = offer_objects['offers'][0]
-
-        accept_sell_offer_tx = NFTokenAcceptOffer(
-            account=issuerAddr,
-            nftoken_buy_offer=first_offer_object["nft_offer_index"]
-        )
-        accept_sell_offer_tx_signed = safe_sign_and_autofill_transaction(transaction=accept_sell_offer_tx,
-                                                                         wallet=self.get_superuser_address(),
-                                                                         client=self.client)
-        accept_sell_offer_tx_signed = send_reliable_submission(transaction=accept_sell_offer_tx_signed,
-                                                               client=self.client)
-        accept_sell_offer_tx_result = accept_sell_offer_tx_signed.result
-
-        return accept_sell_offer_tx_result
+        return super_user_xrpl_service.accept_nft(issuerAddr, response['NFTokenID'])
 
     def get_subscriptions(self, account: Account):
         issuerAddr = account.get_wallet().classic_address

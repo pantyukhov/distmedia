@@ -26,6 +26,9 @@ class SuperUserXrplService:
         seed = settings.WALLET_CREDS["seed"]
         return Wallet(seed=seed, sequence=0)
 
+    def get_superuser_address(self):
+        return set
+
     def listen_new_transaction(self):
         issuer_wallet = self.get_superuser_waller()
         req = Subscribe(streams=[StreamParameter.TRANSACTIONS], accounts=[issuer_wallet.classic_address])
@@ -36,6 +39,27 @@ class SuperUserXrplService:
                 if message.get("transaction", {}).get("Destination", "") == issuer_wallet.classic_address:
                     yield message
 
+    def accept_nft(self, client_address, nftTokenID):
+        # TODO: Put it to worker
+        response_offers = self.client.request(
+            NFTBuyOffers(nft_id=nftTokenID)
+        )
+
+        offer_objects = response_offers.result
+        first_offer_object = offer_objects['offers'][0]
+
+        accept_sell_offer_tx = NFTokenAcceptOffer(
+            account=client_address,
+            nftoken_buy_offer=first_offer_object["nft_offer_index"]
+        )
+        accept_sell_offer_tx_signed = safe_sign_and_autofill_transaction(transaction=accept_sell_offer_tx,
+                                                                         wallet=self.get_superuser_waller(),
+                                                                         client=self.client)
+        accept_sell_offer_tx_signed = send_reliable_submission(transaction=accept_sell_offer_tx_signed,
+                                                               client=self.client)
+        accept_sell_offer_tx_result = accept_sell_offer_tx_signed.result
+
+        return accept_sell_offer_tx_result
 
     def generate_subscriptions(self):
         issuer_wallet = self.get_superuser_waller()
