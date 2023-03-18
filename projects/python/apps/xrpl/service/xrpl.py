@@ -121,7 +121,10 @@ class XrplService:
             response = requests.post(f'{self.ipfs_url}/api/v0/get', params=params)
 
             text =response.text[response.text.index("{"):response.text.rindex("}")+1]
-            return json.loads(text)
+            data = json.loads(text)
+            data["hash"] =h
+
+            return data
 
         return None
 

@@ -22,7 +22,6 @@ class ArticleService:
 
 
 
-            print(nft)
         return articles
         # return self.bucket_client.(self.bucket_name)
 
