@@ -137,6 +137,8 @@ class XrplService:
         response = response.result['account_nfts']
         return response
 
+    def purchase_article(self, account: Account, nft_id):
+        print(nft_id)
 
     def upload_content(self, account: Account, content):
         ipfs_address = self.ipfs_client.add_str(content)

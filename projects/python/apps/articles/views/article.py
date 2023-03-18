@@ -1,14 +1,24 @@
 from rest_framework import viewsets, status
+from rest_framework.decorators import action
 from rest_framework.mixins import CreateModelMixin
 from rest_framework.response import Response
 
-from apps.articles.serializers import ArticleSerializer
+from apps.articles.serializers import ArticleSerializer, PurchaseArticle
 from apps.articles.service.article import article_service
+from apps.xrpl.service.xrpl import xrpl_service
 
 
 class ArticleViewSet(CreateModelMixin, viewsets.ViewSet):
     serializer_class = ArticleSerializer
 
+    serializers = {
+        'purchase_article': PurchaseArticle,
+        # etc.
+    }
+
+    def get_serializer_class(self):
+        return self.serializers.get(self.action,
+                                    self.serializer_class)
 
     def get_serializer_context(self):
         """
@@ -25,7 +35,7 @@ class ArticleViewSet(CreateModelMixin, viewsets.ViewSet):
         Return the serializer instance that should be used for validating and
         deserializing input, and for serializing output.
         """
-        serializer_class = self.serializer_class
+        serializer_class = self.get_serializer_class()
         kwargs.setdefault('context', self.get_serializer_context())
         return serializer_class(*args, **kwargs)
 
@@ -41,4 +51,11 @@ class ArticleViewSet(CreateModelMixin, viewsets.ViewSet):
         items = article_service.get_articles(addresses)
         return Response(items)
 
+    @action(detail=False, methods=['post'])
+    def purchase_article(self, request):
+        serializer = PurchaseArticle(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
+        data = xrpl_service.purchase_article(request.account_wallet, serializer.validated_data["nft_id"])
+
+        return Response(data)

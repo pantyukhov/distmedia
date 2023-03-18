@@ -4,6 +4,10 @@ from typing import Optional
 
 
 @dataclass
+class PurchaseArticle:
+    nft_id: Optional[str]
+
+@dataclass
 class Article:
     title: Optional[str]
     description: Optional[str]
