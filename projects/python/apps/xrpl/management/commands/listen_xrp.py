@@ -1,5 +1,7 @@
 from django.core.management.base import BaseCommand
 
+from apps.xrpl.service.superuser_xrpl import super_user_xrpl_service
+
 
 class Command(BaseCommand):
     help = 'Article publisher'
@@ -8,4 +10,4 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        pass
+        super_user_xrpl_service.listen_nft_offers()

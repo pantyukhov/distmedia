@@ -6,5 +6,5 @@ import (
 )
 
 type ArticlePublisher interface {
-	PublishArticle(ctx context.Context, req *entity.Article) error
+	PublishArticle(ctx context.Context, topic string, req *entity.Article) error
 }

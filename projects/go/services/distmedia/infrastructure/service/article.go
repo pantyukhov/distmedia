@@ -10,7 +10,7 @@ import (
 )
 
 type ArticleService struct {
-	topic *pubsub.Topic
+	pubSub *pubsub.PubSub
 }
 
 func NewArticleService(ctx context.Context, publisherConfig config.PublisherConfig) *ArticleService {
@@ -32,27 +32,26 @@ func NewArticleService(ctx context.Context, publisherConfig config.PublisherConf
 		panic(err)
 	}
 
-	//room := publisherConfig.Address
-	topic, err := gossipSub.Join("1231232131")
-	if err != nil {
-		panic(err)
-	}
-
-	err = topic.Publish(context.Background(), []byte{})
-	if err != nil {
-		panic(err)
-	}
 	return &ArticleService{
-		topic: topic,
+		pubSub: gossipSub,
 	}
 }
 
-func (s *ArticleService) PublishArticle(ctx context.Context, req *entity.Article) error {
+func (s *ArticleService) PublishArticle(ctx context.Context, topic string, req *entity.Article) error {
+	t, err := s.pubSub.Join(topic)
+	if err != nil {
+		panic(err)
+	}
+
 	data, err := req.Marshal()
 	if err != nil {
 		return err
 	}
 
-	return s.topic.Publish(ctx, data)
+	go func() {
+		t.Subscribe()
+	}()
+
+	return t.Publish(context.Background(), data)
 
 }

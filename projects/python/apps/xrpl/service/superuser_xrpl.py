@@ -27,30 +27,69 @@ class SuperUserXrplService:
         return Wallet(seed=seed, sequence=0)
 
     def get_superuser_address(self):
-        return set
+        return settings.WALLET_CREDS["classic_address"]
+
+    def process_token_offer(self, message):
+        owner_address = self.get_superuser_address()
+        if message.get("transaction", {}).get("Owner") == owner_address:
+            print(message)
+
+    def listen_nft_offers(self):
+        account = self.get_superuser_waller()
+        response = self.client.request(
+            AccountNFTs(account=self.get_superuser_address())
+        )
+
+        if response.status[0:7] == "success":
+            nft_list = response.result['account_nfts']
+
+            # Only append the NFTs' NFT ID onto the nft_keylets list, other fields aren't needed
+            nft_keylets = []
+            for x in nft_list:
+                nft_keylets.append(x['NFTokenID'])
+
+            # Query through the NFTs' buy Offers
+            # For each NFT owned by the account (on nft_keylets), go through all their respective buy Offerss
+            for nft in nft_keylets:
+                response = self.client.request(
+                    NFTBuyOffers(
+                        nft_id=nft
+                    )
+                )
+
+                offer_objects = response.result
+                if 'error' not in offer_objects:
+                    for offer_object in offer_objects.get("offers"):
+                        self.accept_nft(offer_object)
+                        print(f"\n Offer {offer_object['nft_offer_index']} was accepted")
+                else:
+                    print(f"\nNFT {nft} does not have any buy offers...")
+
+        else:
+            print(f"Account {account} does not own any NFTs!")
+        # issuer_wallet = self.get_superuser_waller()
+        # response = self.client.request(
+        #     AccountNFTs(account=issuer_wallet)
+        # )
 
     def listen_new_transaction(self):
         issuer_wallet = self.get_superuser_waller()
-        req = Subscribe(streams=[StreamParameter.TRANSACTIONS], accounts=[issuer_wallet.classic_address])
+        req = Subscribe(streams=[StreamParameter.TRANSACTIONS], accounts=[self.get_superuser_address()])
         with WebsocketClient(self.WEBSOCKET_URL) as client:
             client.send(req)
             # inside the context the client is open
             for message in client:
-                if message.get("transaction", {}).get("Destination", "") == issuer_wallet.classic_address:
-                    yield message
+                print(message)
+                if message.get("engine_result") == "tecUNFUNDED_OFFER":
+                    self.process_token_offer(message)
 
-    def accept_nft(self, client_address, nftTokenID):
-        # TODO: Put it to worker
-        response_offers = self.client.request(
-            NFTBuyOffers(nft_id=nftTokenID)
-        )
+                # if message.get("transaction", {}).get("Destination", "") == issuer_wallet.classic_address:
+                #     yield message
 
-        offer_objects = response_offers.result
-        first_offer_object = offer_objects['offers'][0]
-
+    def accept_nft(self, offer):
         accept_sell_offer_tx = NFTokenAcceptOffer(
-            account=client_address,
-            nftoken_buy_offer=first_offer_object["nft_offer_index"]
+            account=offer["owner"],
+            nftoken_buy_offer=offer["nft_offer_index"]
         )
         accept_sell_offer_tx_signed = safe_sign_and_autofill_transaction(transaction=accept_sell_offer_tx,
                                                                          wallet=self.get_superuser_waller(),

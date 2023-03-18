@@ -80,6 +80,7 @@ class XrplService:
         response = self.client.request(get_account_nfts)
         response = response.result['account_nfts'][0]
 
+
         nfTokeID = response['NFTokenID']
         buy_tx = NFTokenCreateOffer(
             account=buyerAddr,
@@ -93,7 +94,10 @@ class XrplService:
         buy_tx_signed = send_reliable_submission(transaction=buy_tx_signed, client=self.client)
         buy_tx_result = buy_tx_signed.result
 
-        return super_user_xrpl_service.accept_nft(issuerAddr, response['NFTokenID'])
+
+        return {}
+        #
+        # return super_user_xrpl_service.accept_nft(issuerAddr, response['NFTokenID'])
 
     def get_subscriptions(self, account: Account):
         issuerAddr = account.get_wallet().classic_address
