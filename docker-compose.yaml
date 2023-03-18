@@ -1,8 +1,15 @@
 version: '3.4'
 
 services:
-
-
+  api:
+    restart: always
+    build: ./docker/python
+    expose:
+      - "8000"
+    env_file: projects/python/.env
+    environment:
+      DEBUG: 'true'
+    command: python manage runserver
 
   ipfs0:
     container_name: ipfs0
