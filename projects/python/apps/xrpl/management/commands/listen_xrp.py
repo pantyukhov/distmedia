@@ -10,4 +10,4 @@ class Command(BaseCommand):
         pass
 
     def handle(self, *args, **options):
-        super_user_xrpl_service.listen_nft_offers()
+        super_user_xrpl_service.listen_new_transaction()

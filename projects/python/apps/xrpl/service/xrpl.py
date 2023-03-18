@@ -104,5 +104,25 @@ class XrplService:
         get_account_nfts = self.client.request(AccountNFTs(account=issuerAddr))
         return get_account_nfts.result['account_nfts']
 
+    def upload_content(self, account: Account, content):
+        ipfs_address = self.ipfs_client.add_str(content)
+        issuer_wallet = account.get_wallet()
+
+        uri = xrpl.utils.str_to_hex(f"ipfs://{ipfs_address}")
+        mint_tx = NFTokenMint(
+            account=issuer_wallet.classic_address,
+            nftoken_taxon=1,
+            flags=NFTokenMintFlag.TF_TRANSFERABLE,
+            uri=uri,
+        )
+
+        # Sign mint_tx using the issuer account
+        mint_tx_signed = safe_sign_and_autofill_transaction(transaction=mint_tx, wallet=issuer_wallet,
+                                                            client=xrpl_service.client)
+        mint_tx_signed = send_reliable_submission(transaction=mint_tx_signed, client=xrpl_service.client)
+        mint_tx_result = mint_tx_signed.result
+
+        return mint_tx_result
+
 
 xrpl_service = XrplService()
