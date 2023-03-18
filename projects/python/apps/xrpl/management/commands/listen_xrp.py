@@ -1,12 +1,6 @@
-import base64
-import json
+from django.core.management.base import BaseCommand
 
-from django.conf import settings
-from django.core.management.base import BaseCommand, CommandError
-from xrpl.models import NFTokenMint, NFTokenMintFlag, AccountNFTs
-from xrpl.transaction import safe_sign_and_autofill_transaction, send_reliable_submission
-
-from apps.xrpl.service.xrpl import xrpl_service
+from apps.xrpl.service.superuser_xrpl import super_user_xrpl_service
 
 
 class Command(BaseCommand):
@@ -15,6 +9,6 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         pass
 
-    def handle(self, total_nfts, *args, **options):
-
-        xrpl_service.generate_subscriptions(total_nfts)
+    def handle(self, *args, **options):
+        for message in super_user_xrpl_service.listen_new_transaction():
+            print(message)
