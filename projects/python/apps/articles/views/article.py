@@ -37,7 +37,8 @@ class ArticleViewSet(CreateModelMixin, viewsets.ViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def list(self, request):
-        items = article_service.get_articles()
+        addresses = self.request.query_params.getlist('addresses', [])
+        items = article_service.get_articles(addresses)
         return Response(items)
 
 

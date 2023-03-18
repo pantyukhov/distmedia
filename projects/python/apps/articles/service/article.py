@@ -11,8 +11,19 @@ from apps.xrpl.service.xrpl import xrpl_service
 
 class ArticleService:
 
-    def get_articles(self):
-        return []
+    def get_articles(self, addresses):
+        articles = []
+        for address in addresses:
+            nfts = xrpl_service.get_nfts(address)
+            for nft in nfts:
+                content =  xrpl_service.read_nft_content(nft)
+                if content:
+                    articles.append(content)
+
+
+
+            print(nft)
+        return articles
         # return self.bucket_client.(self.bucket_name)
 
 

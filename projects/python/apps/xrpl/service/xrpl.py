@@ -1,7 +1,9 @@
 import json
 from binascii import hexlify
 
+import base58
 import ipfsApi
+import requests
 import xrpl
 from django.conf import settings
 from xrpl.clients import JsonRpcClient, WebsocketClient
@@ -22,6 +24,7 @@ class XrplService:
         self.JSON_RPC_URL = "https://s.altnet.rippletest.net:51234/"
         self.WEBSOCKET_URL = "wss://s.altnet.rippletest.net:51233"
         self.client = JsonRpcClient(self.JSON_RPC_URL)
+        self.ipfs_url = f"http://{settings.IPFS_HOST}:{settings.IPFS_PORT}"
         self.ipfs_client = ipfsApi.Client(settings.IPFS_HOST, settings.IPFS_PORT)
 
     def create_wallet(self) -> Account:
@@ -80,7 +83,6 @@ class XrplService:
         response = self.client.request(get_account_nfts)
         response = response.result['account_nfts'][0]
 
-
         nfTokeID = response['NFTokenID']
         buy_tx = NFTokenCreateOffer(
             account=buyerAddr,
@@ -94,15 +96,44 @@ class XrplService:
         buy_tx_signed = send_reliable_submission(transaction=buy_tx_signed, client=self.client)
         buy_tx_result = buy_tx_signed.result
 
-
         return {}
         #
         # return super_user_xrpl_service.accept_nft(issuerAddr, response['NFTokenID'])
 
     def get_subscriptions(self, account: Account):
         issuerAddr = account.get_wallet().classic_address
-        get_account_nfts = self.client.request(AccountNFTs(account=issuerAddr))
+        get_account_nfts = self.client.request(AccountNFTs(account=issuerAddr, limit=100))
         return get_account_nfts.result['account_nfts']
+
+
+    def read_nft_content(self, nft):
+        uri = nft.get('URI')
+        if uri:
+            uri = bytes.fromhex(nft.get("URI")).decode('utf-8')
+            h = uri.split("//")[1]
+
+            import requests
+
+            params = {
+                'arg': 'QmSzKxZ5EjGLujHMr5yiwj8B2Fi922Fowhu9or5ytBBmde',
+            }
+
+            response = requests.post(f'{self.ipfs_url}/api/v0/get', params=params)
+
+            text =response.text[response.text.index("{"):response.text.rindex("}")+1]
+            return json.loads(text)
+
+        return None
+
+    def get_nfts(self, address):
+        get_account_nfts = AccountNFTs(
+            account=address
+        )
+
+        response = self.client.request(get_account_nfts)
+        response = response.result['account_nfts']
+        return response
+
 
     def upload_content(self, account: Account, content):
         ipfs_address = self.ipfs_client.add_str(content)
