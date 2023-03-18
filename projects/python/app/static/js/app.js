@@ -146,6 +146,59 @@ async function gen_wallet() {
   document.getElementById("wallet_info_link").href = `https://testnet.xrpl.org/accounts/${test_wallet.address}`;
 }
 
+function upload_image() {
+  var file = document.getElementById("uploadedImage").files[0];
+  var reader = new FileReader();
+   reader.onload = function () {
+    var new_img = document.createElement("img");
+    var images_list = document.getElementById("images_list");
+    images_list.appendChild(new_img);
+    new_img.width = 200;
+    new_img.src = reader.result;
+     pushToIpfs(reader.result)
+   };
+   reader.onerror = function (error) {
+     console.log('Error: ', error);
+   };
+   reader.readAsDataURL(file);
+
+  var images_contatiner = document.getElementById("images_contatiner");
+  images_contatiner.style.display = "block";
+}
+
+async function pushToIpfs(base64img) {
+  console.log("Trying to upload img!");
+
+  var body = JSON.stringify({ "title": "someTitle", "description": "Some description", "content": base64img })
+
+  var xhr = new XMLHttpRequest();
+  xhr.onreadystatechange = function () {
+    if (this.readyState != 4) return;
+
+    if (this.status == 201) {
+        var data = JSON.parse(this.responseText);
+
+        if (data.seed !== null) {
+          console.log("Image upload success");
+
+        } else {
+          console.log("Image upload: Something went wrong");
+          // popup
+          document.getElementById("some_error").style.display = "block";
+          setTimeout(function() { 
+              document.getElementById("some_error").style.display = "none";
+            }, 2000);
+        }
+      }
+
+};
+
+  xhr.open("POST", "http://localhost:8000/api/article/");
+ // xhr.setRequestHeader("x-csrftoken", "MuSg7qC2223G7DzwNzsAYKawyeGfkWUpUzUNwSFBrDldtbWXdi9WKeL88552f70O");
+  xhr.setRequestHeader("Content-Type", "application/json");
+  xhr.send(body);
+}
+
 // PAGE: TRANSACTIONS
 
 async function do_transaction() {
@@ -241,3 +294,5 @@ async function do_channel_transaction(channel) {
     .receive("error", (reasons) => console.log("create failed", reasons) )
     .receive("timeout", () => console.log("Networking issue...") )
 }
+
+

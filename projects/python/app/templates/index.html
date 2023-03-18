@@ -19,9 +19,9 @@
       </section>
     </header>
     <section class="phx-hero">
-  <h1>Anti-Censorship Media! - Client</h1>
-  <p>Made by SnT (University of Luxembourg)</p>
-</section>
+      <h1>Anti-Censorship Media! - Publisher</h1>
+      <p>Made by SnT (University of Luxembourg)</p>
+    </section>
 
 <p id="some_error" style="display: none;" class="alert alert-danger" role="alert">Something went wrong!</p>
 <p id="popup" style="display: none;" class="alert alert-info" role="alert">Transaction has been made!</p>
@@ -41,24 +41,20 @@
           <div id="wallet_info_priv_key" style="overflow-y: scroll;"></div><br>
           <div>XRP Ledger: <a id="wallet_info_link" target="_blank">Link</a></div><br>
         </div>
-        <button id="connect_wallet_button">View subscriptions</button>
-        <h3>OR</h3>
-        <button id="gen_wallet_button">Create subscription</button>
+        <div style="margin: 16px; padding: 16px">
+          <input
+            class="form-control form-control-lg"
+            id="uploadedImage"
+            type="file"
+          />
+          <button onclick="upload_image()" id="upload_image">Upload</button>
+        </div>
       </div>
-
-      <!-- <div id="transaction_container" style="display: none;">
-        <h2>Click a button OR perform the transaction from the Headset</h2>
-        <div id="wallet_info" style="font-weight: 500;">
-          <div id="wallet_info_seed"></div><br>
-          <div id="wallet_info_address"></div><br>
-          <div id="wallet_info_balance"></div><br>
-          <div>XRP Ledger: <a id="wallet_info_link" target="_blank">Link</a></div><br>
-        </div>
-        <div id="">
-          <button id="transaction_button">Do transaction</button>
-        </div>
-      </div> -->
 </section>
+<section class="phx-hero" id="images_contatiner" style="display: none";>
+        <h2>My images</h2>
+        <div id="images_list"></div>
+      </section>  
 
 
   </body>
