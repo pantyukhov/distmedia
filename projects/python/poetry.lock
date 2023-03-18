@@ -213,6 +213,20 @@ lint = ["flake8 (==4.0.1)", "flake8-bugbear (==21.9.2)", "mypy (==0.910)", "pre-
 tests = ["pytest", "dj-database-url", "dj-email-url", "django-cache-url"]
 
 [[package]]
+name = "gunicorn"
+version = "20.1.0"
+description = "WSGI HTTP Server for UNIX"
+category = "main"
+optional = false
+python-versions = ">=3.5"
+
+[package.extras]
+eventlet = ["eventlet (>=0.24.1)"]
+gevent = ["gevent (>=1.4.0)"]
+setproctitle = ["setproctitle"]
+tornado = ["tornado (>=0.2)"]
+
+[[package]]
 name = "h11"
 version = "0.12.0"
 description = "A pure-Python, bring-your-own-I/O implementation of HTTP/1.1"
@@ -504,7 +518,7 @@ websockets = [
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "8ff810ac3b06cab325e8f5110d367cc697c0595ab3e3552eefbf293c97307db3"
+content-hash = "f1ade71b372c5c42e41af8c116d06f5eb6edf6fbd01524f59a14acc8f3192132"
 
 [metadata.files]
 anyio = []
@@ -524,6 +538,7 @@ djangorestframework = []
 djangorestframework-dataclasses = []
 ecpy = []
 environs = []
+gunicorn = []
 h11 = []
 httpcore = []
 httpx = []

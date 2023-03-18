@@ -1,23 +1,20 @@
-version: '3.4'
+version: '2'
 
 services:
   api:
     restart: always
-    build: ./docker/python
-    expose:
-      - "8000"
+    build: ./projects/python
+    ports:
+      - "8000:8000"
     env_file: projects/python/.env
-    environment:
-      DEBUG: 'true'
-    command: python manage runserver
 
   ipfs0:
     container_name: ipfs0
     image: ipfs/kubo:release
     ports:
-     - "4001:4001" # ipfs swarm - expose if needed/wanted
-     - "5001:5001" # ipfs api - expose if needed/wanted
-     - "8080:8080" # ipfs gatedocker rm $(docker ps -a -q)way - expose if needed/wanted
+     - "4001:4001"
+     - "5001:5001"
+     - "8080:8080"
     volumes:
       - ./compose/ipfs0:/data/ipfs
 
