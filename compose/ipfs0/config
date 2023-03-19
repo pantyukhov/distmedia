@@ -1,6 +1,13 @@
 {
   "API": {
-    "HTTPHeaders": {}
+    "HTTPHeaders": {
+      "Access-Control-Allow-Origin": [
+        "http://138.68.83.7:5001",
+        "http://localhost:3000",
+        "http://127.0.0.1:5001",
+        "https://webui.ipfs.io"
+      ]
+    }
   },
   "Addresses": {
     "API": "/ip4/0.0.0.0/tcp/5001",
