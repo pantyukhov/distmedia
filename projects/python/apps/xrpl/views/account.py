@@ -33,6 +33,9 @@ class AccountViewSet(viewsets.ViewSet):
     def list(self, request, *args, **kwargs):
         return Response(AccountSerializer(instance=self.request.account_wallet).data)
 
+    def create(self, request, *args, **kwargs):
+        account = xrpl_service.create_wallet()
+        return Response(AccountSerializer(instance=account).data, status=status.HTTP_201_CREATED)
 
     @action(detail=False, methods=['post'])
     def generate_keys(self, request, pk=None):

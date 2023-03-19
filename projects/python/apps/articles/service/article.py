@@ -15,6 +15,7 @@ class ArticleService:
         articles = []
         for address in addresses:
             nfts = xrpl_service.get_nfts(address)
+            nfts.reverse()
             for nft in nfts:
                 content =  xrpl_service.read_nft_content(nft)
                 if content:
@@ -22,7 +23,6 @@ class ArticleService:
 
 
 
-        articles.reverse()
         return articles
         # return self.bucket_client.(self.bucket_name)
 
