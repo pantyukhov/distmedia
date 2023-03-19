@@ -51,7 +51,7 @@ function try_register() {
           //   }
           // };
 
-          // xhrKeys.open("POST", "http://localhost:8000/api/account/generate_keys/");
+          // xhrKeys.open("POST", "/api/account/generate_keys/");
           // xhrKeys.setRequestHeader("Content-Type", "application/json");
           // xhrKeys.send();
 
@@ -198,9 +198,8 @@ async function pushToIpfs(base64img) {
 
 }; 
  
-  var header = "ewogICAgInB1YmxpY19rZXkiOiAiRUQwNUM1OTA3MEU0RTA1NjM3RUM2Q0ZDQjU5QkE2QzUwOTNDMTk0QkZEMjE3MjAxRUU3NDJGODBCMzAxRDA2QUEyIiwKICAgICJwcml2YXRlX2tleSI6ICJFRDlGRDAzNkQzRTFGNjA0NTEwMjcxMDAzMEVGOEIxQkQ5Nzc4RUQ3QURBN0E2NDFCRjVBRTY1MTk3OTYwODIwNEYiLAogICAgImNsYXNzaWNfYWRkcmVzcyI6ICJyNGREWTl2OTRyem4yeThMbjloTkZqR05OMXc2UXJONjcyIiwKICAgICJzZWVkIjogInNFZFY1OTdXbVBEYnlNVUMxTWVTMUh2Rll1aEtnRU0iCn0=";
-
-  xhr.open("POST", "http://localhost:8000/api/article/");
+  var header = "ewogICAgInB1YmxpY19rZXkiOiAiRUQzNUM5MzRDRTg1OUVDQTY3NkQwOUFBQzgyRTE4RDQyMDkwMUQ1OEY0M0IxQzA4NDU0NEFFRTk3QkU1MzI0OTUyIiwKICAgICJwcml2YXRlX2tleSI6ICJFREZERTU4NUUxMjNGQzIyMDRFMUNDOEQwQTE5QkNBMUExOURGQzJFNDhEMTg2NTNDQjcxQTQ4RUUxOUVFRTk4QzEiLAogICAgImNsYXNzaWNfYWRkcmVzcyI6ICJySHpHS0pDR2RNbVF3NEE0ZFRwamF2c3BDRUZpczlmN2lzIiwKICAgICJzZWVkIjogInNFZDd6eVpVUnM0MW1mOHZMZ3pHbWhkTmFyUXRBTXAiCn0="
+  xhr.open("POST", "/api/article/");
   xhr.setRequestHeader("X-WALLET-AUTH", header);
   xhr.setRequestHeader("Content-Type", "application/json");
   xhr.send(body);
