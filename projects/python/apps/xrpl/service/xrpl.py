@@ -17,6 +17,7 @@ from apps.libs.encryption.keys import generate_keys
 from apps.xrpl.dataclass.account import Account
 from apps.xrpl.service import REQUEST_SUBSCRIPTION_DROPS, USER_SUBSCRIPTION_DROPS
 from apps.xrpl.service.superuser_xrpl import super_user_xrpl_service
+from apps.xrpl.service.test import test_image
 
 
 class XrplService:
@@ -122,12 +123,13 @@ class XrplService:
             # if response.status_code != 200:
             #     return None
             # text =response.text[response.text.index("{"):response.text.rindex("}")+1]
-
-            data = json.loads({
+            #
+            # data = json.loads(text)
+            data = {
                 "title": "Test",
                 "description": "Test",
-                "content": "test_image"
-            })
+                "content": test_image,
+            }
             data["hash"] =h
             data["token"] = nft
 
