@@ -146,7 +146,7 @@ class XrplService:
         )
 
         response = self.client.request(get_account_nfts)
-        response = response.result.get('account_nfts', [])
+        response = response.result['account_nfts']
         return response
 
     def purchase_article(self, account: Account, original_nft_id):
