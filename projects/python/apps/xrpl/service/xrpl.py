@@ -149,7 +149,7 @@ class XrplService:
 
     def purchase_article(self, account: Account, original_nft_id):
         #Get issuer wallet and address
-        issuer_wallet = self.get_superuser_address()
+        issuer_wallet = super_user_xrpl_service.get_superuser_waller()
         issuerAddr = issuer_wallet.classic_address
 
         # Put original nft_id on ipfs
