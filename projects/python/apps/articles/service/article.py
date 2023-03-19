@@ -22,6 +22,7 @@ class ArticleService:
 
 
 
+        articles.reverse()
         return articles
         # return self.bucket_client.(self.bucket_name)
 

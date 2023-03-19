@@ -5,7 +5,7 @@ services:
     restart: always
     build: ./projects/python
     ports:
-      - "80:8000"
+      - "8000:8000"
     env_file: projects/python/.env
 
   ipfs0:

@@ -115,7 +115,7 @@ class XrplService:
             import requests
 
             params = {
-                'arg': 'QmSzKxZ5EjGLujHMr5yiwj8B2Fi922Fowhu9or5ytBBmde',
+                'arg': h,
             }
 
             response = requests.post(f'{self.ipfs_url}/api/v0/get', params=params)
