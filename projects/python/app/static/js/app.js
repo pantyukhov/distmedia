@@ -52,10 +52,10 @@ function try_register() {
           // xhrKeys.send();
 
           // Set values
-          document.getElementById("wallet_info_seed").innerHTML = `Seed: ${data.seed}`;
+          // document.getElementById("wallet_info_seed").innerHTML = `Seed: ${data.seed}`;
           document.getElementById("wallet_info_address").innerHTML = `Address: ${data.classic_address}`;
-          document.getElementById("wallet_info_pub_key").innerHTML = `Public key: ${data.public_key}`;
-          document.getElementById("wallet_info_priv_key").innerHTML = `Private key: ${data.private_key}`;
+          // document.getElementById("wallet_info_pub_key").innerHTML = `Public key: ${data.public_key}`;
+          // document.getElementById("wallet_info_priv_key").innerHTML = `Private key: ${data.private_key}`;
           document.getElementById("wallet_info_link").href = `https://testnet.xrpl.org/accounts/${data.classic_address}`;
 
         // } else {
