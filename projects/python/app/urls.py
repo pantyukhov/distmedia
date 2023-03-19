@@ -1,3 +1,4 @@
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import path, include, re_path
 from rest_framework.routers import DefaultRouter
 from . import views
@@ -16,3 +17,5 @@ urlpatterns = [
     re_path('^api/', include(router.urls)),
     re_path(r"^api/user/", include("apps.user.urls")),
 ]
+
+urlpatterns += staticfiles_urlpatterns()
