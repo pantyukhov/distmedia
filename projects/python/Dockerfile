@@ -42,5 +42,6 @@ RUN python manage.py migrate
 ARG SERVICE_VERSION="undefined"
 ENV SERVICE_VERSION $SERVICE_VERSION
 
-CMD ["gunicorn", "app.wsgi", "-w", "2", "--max-requests", "1000", "-b", "0.0.0.0:8000"]
+CMD [ "python", "./manage.py runserver 0.0.0.0:8000"]
+#CMD ["gunicorn", "app.wsgi", "-w", "2", "--max-requests", "1000", "-b", "0.0.0.0:8000"]
 
