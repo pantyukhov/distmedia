@@ -146,8 +146,47 @@ class XrplService:
         response = response.result['account_nfts']
         return response
 
-    def purchase_article(self, account: Account, nft_id):
-        print(nft_id)
+
+    def purchase_article(self, account: Account, original_nft_id):
+        #Get issuer wallet and address
+        issuer_wallet = self.get_superuser_address()
+        issuerAddr = issuer_wallet.classic_address
+
+        # Put original nft_id on ipfs
+        ipfs_address = self.ipfs_client.add_str(original_nft_id)
+        uri = xrpl.utils.str_to_hex(f"ipfs://{ipfs_address}")
+
+        # mint
+        mint_tx = NFTokenMint(
+            account=issuerAddr,
+            nftoken_taxon=1,
+            flags=NFTokenMintFlag.TF_TRANSFERABLE,
+            uri=uri,
+        )
+
+        # Sign mint_tx using the issuer account
+        mint_tx_signed = safe_sign_and_autofill_transaction(transaction=mint_tx, wallet=issuer_wallet,
+                                                            client=xrpl_service.client)
+        mint_tx_signed = send_reliable_submission(transaction=mint_tx_signed, client=xrpl_service.client)
+        mint_tx_result = mint_tx_signed.result
+        if not mint_tx_result:
+            raise Exception("NFT not mint")
+
+        buyer_wallet = account.get_wallet()
+        buyerAddr = buyer_wallet.classic_address
+
+        response = self.client.request(issuer_wallet)
+        response = response.result['account_nfts'][0]
+
+        nfTokeID = response['NFTokenID']
+        buy_tx = NFTokenCreateOffer(
+            account=issuerAddr,
+            destination=buyerAddr,
+            nftoken_id=nfTokeID,
+            amount=str(USER_SUBSCRIPTION_DROPS),  # 10 XRP in drops, 1 XRP = 1,000,000 drops
+        )
+
+        # print(nft_id)
         return {}
 
     def upload_content(self, account: Account, content):
