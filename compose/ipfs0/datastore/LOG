@@ -149,3 +149,47 @@
 22:18:09.633205 db@open done T·46.980989ms
 22:18:28.536660 db@close closing
 22:18:28.538694 db@close done T·2.033432ms
+=============== Mar 19, 2023 (UTC) ===============
+02:16:29.312064 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+02:16:29.333381 version@stat F·[2 1] S·39KiB[19KiB 19KiB] Sc·[0.50 0.00]
+02:16:29.335047 db@open opening
+02:16:29.337160 journal@recovery F·2
+02:16:29.345312 journal@recovery recovering @31
+02:16:29.381410 journal@recovery recovering @47
+02:16:29.390278 version@stat F·[2 1] S·39KiB[19KiB 19KiB] Sc·[0.50 0.00]
+02:16:29.490025 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.493028 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.494952 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.497434 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.499083 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.501182 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.502339 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.504240 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.507622 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.509714 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.512378 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.513782 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.515358 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.517482 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.519126 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.521900 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.523734 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.526270 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.531311 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.533281 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.534841 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.539186 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.542375 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.546575 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.548661 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.550366 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.552120 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.553477 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.557773 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.560936 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.563655 journal error: leveldb: batch corrupted: invalid sequence number (skipped)
+02:16:29.592008 version@stat F·[2 1] S·39KiB[19KiB 19KiB] Sc·[0.50 0.00]
+02:16:29.613972 db@janitor F·7 G·2
+02:16:29.616063 db@janitor removing table-43
+02:16:29.623681 db@janitor removing table-44
+02:16:29.632169 db@open done T·295.6275ms
