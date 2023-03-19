@@ -217,3 +217,12 @@ header nav a {
   0% { opacity: 1; }
   100% { opacity: 0; }
 }
+
+.file-label {
+  width: 15rem;
+}
+input[type=file].hidden {
+  visibility: hidden;
+  width: 15rem;
+  margin-left: -15rem;
+}

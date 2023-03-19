@@ -16,6 +16,8 @@ window.onload = function(){
 };
 
 
+const data64 = "ewogICAgInB1YmxpY19rZXkiOiAiRURERDMyRUExOEQxMEIxNjRFMkM2QzMxQjU4RDc4OEYwMkZFRUE3NkRCN0ZDNjNCQTBFMjQyN0ZBMDFDMEI2NEY3IiwKICAgICJwcml2YXRlX2tleSI6ICJFREE4NEVEOEYyNTQ0MUVFMTFFNDc5MTFEQTU1NzQwRjkwQTAyMEI1RTMxMzJBOUIyRDQzMDU5MTQ4NEEyQUNDMTQiLAogICAgImNsYXNzaWNfYWRkcmVzcyI6ICJyaDV5dlFtS0tTNFFSdUU0aDdSWFBleW0yUHpuc3M3YVJMIiwKICAgICJzZWVkIjogInNFZFNZZTVkckhXUFRIZm8xSmpOWW02bTlvY1cxRTQiCn0="
+     
 function try_register() {
   console.log("Trying to register!");
 
@@ -24,13 +26,7 @@ function try_register() {
   //   if (this.readyState != 4) return;
 
   //   if (this.status == 201) {
-  //       var data = JSON.parse(this.responseText);
-          var data = {
-            public_key: "ED5CD0D8465CE0BDD3A444B560F3A5534A9D1178D5894E807960E0DE114EBDBD21",
-            private_key: "ED10BC604777635E138C0A37B0445F4ADEA7FE151C014FB6B41262A4AD54E4FEEE",
-            classic_address: "rsmjQkR3ojdsYMXcEmJz4pqiLFmBfS6Pab",
-            seed: "sEdVFYZFfQ3b6aDuob3poutdBV25i4y"
-          }
+        var data = JSON.parse(atob(data64));
 
         if (data.seed !== null) {
           console.log("Logged in");
@@ -155,11 +151,6 @@ function upload_image() {
   var file = document.getElementById("uploadedImage").files[0];
   var reader = new FileReader();
    reader.onload = function () {
-    var new_img = document.createElement("img");
-    var images_list = document.getElementById("images_list");
-    images_list.appendChild(new_img);
-    new_img.width = 200;
-    new_img.src = reader.result;
      pushToIpfs(reader.result)
    };
    reader.onerror = function (error) {
@@ -173,8 +164,9 @@ function upload_image() {
 
 async function pushToIpfs(base64img) {
   console.log("Trying to upload img!");
+  document.getElementById("loader").style.display = "block";
 
-  var body = JSON.stringify({ "title": "someTitle", "description": "Some description", "content": base64img })
+  var body = JSON.stringify({ "title": "My Image", "description": "The best image", "content": base64img })
 
   var xhr = new XMLHttpRequest();
   xhr.onreadystatechange = function () {
@@ -185,6 +177,12 @@ async function pushToIpfs(base64img) {
 
         if (data.seed !== null) {
           console.log("Image upload success");
+          document.getElementById("loader").style.display = "none";
+          var new_img = document.createElement("img");
+          var images_list = document.getElementById("images_list");
+          images_list.appendChild(new_img);
+          new_img.width = 200;
+          new_img.src = base64img;
 
         } else {
           console.log("Image upload: Something went wrong");
@@ -198,7 +196,7 @@ async function pushToIpfs(base64img) {
 
 }; 
  
-  var header = "ewogICAgInB1YmxpY19rZXkiOiAiRURGMjFBRUI4QjUwQjJBMjMzQUQ2MzBDNTMyMzQ1Q0Q2QTc4MzgxNDg3MTk4OTEyRkNCMDJEMEVGMUZDNzlFOUNGIiwKICAgICJwcml2YXRlX2tleSI6ICJFRDVDNzMzNUI2MTZDMTJCRTEyNkNFN0JGOENDOTJGN0JDN0FDNDZCRTE2OTEwMDA5NkFBNjhFMThFQjcyRTg3RjciLAogICAgImNsYXNzaWNfYWRkcmVzcyI6ICJySzZqTjNpR05YZTR4VDQ4UVoyQlVnSDFXZ2hDMzVRMjgyIiwKICAgICJzZWVkIjogInNFZDdRYkV2UVJhYjRlMkJMNHpiSjhldUdua2EzNnAiCn0="
+  var header = data64;
   xhr.open("POST", "https://demedia.parhizkari.com/api/article/");
   xhr.setRequestHeader("X-WALLET-AUTH", header);
   xhr.setRequestHeader("Content-Type", "application/json");
