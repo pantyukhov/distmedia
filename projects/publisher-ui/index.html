@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>acMedia Demo · Unilu</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script type="text/javascript" src="js/app.js"></script>
+    <script src="https://unpkg.com/xrpl@2.0.0/build/xrpl-latest-min.js"></script>
+  </head>
+  <body>
+    <header>
+      <section class="container" id="header">
+        <nav>
+            <button id="logout_button" style="display: none;">Logout</button>
+        </nav>
+      </section>
+    </header>
+    <section class="phx-hero">
+      <h1>Anti-Censorship Media! - Publisher</h1>
+      <p>Made by SnT (University of Luxembourg)</p>
+    </section>
+
+<p id="some_error" style="display: none;" class="alert alert-danger" role="alert">Something went wrong!</p>
+<p id="popup" style="display: none;" class="alert alert-info" role="alert">Transaction has been made!</p>
+
+<section class="phx-hero">
+      <div id="login_container">
+        <h2>Please register to continue</h2>
+        <button id="register_button">Register</button>
+      </div>
+
+      <div id="wallet_container" style="display: none;">
+        <h2>Here is your wallet</h2>
+        <div id="wallet_info" style="font-weight: 500;">
+          <div id="wallet_info_seed"></div><br>
+          <div id="wallet_info_address"></div><br>
+          <div id="wallet_info_pub_key" style="overflow-y: scroll;"></div><br>
+          <div id="wallet_info_priv_key" style="overflow-y: scroll;"></div><br>
+          <div>XRP Ledger: <a id="wallet_info_link" target="_blank">Link</a></div><br>
+        </div>
+        <div style="margin: 16px; padding: 16px">
+          <input
+            class="form-control form-control-lg"
+            id="uploadedImage"
+            type="file"
+          />
+          <button onclick="upload_image()" id="upload_image">Upload</button>
+        </div>
+      </div>
+</section>
+<section class="phx-hero" id="images_contatiner" style="display: none";>
+        <h2>My images</h2>
+        <div id="images_list"></div>
+      </section>  
+
+
+  </body>
+</html>
