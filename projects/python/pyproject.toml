@@ -18,6 +18,7 @@ wallet = "^2.1.525"
 cryptography = "^39.0.2"
 ipfs-api = "^0.2.3"
 gunicorn = "^20.1.0"
+django-cors-headers = "^3.14.0"
 
 [tool.poetry.dev-dependencies]
 

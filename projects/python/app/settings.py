@@ -19,12 +19,19 @@ DEBUG = env.bool("DEBUG", "true")
 
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", ["*"])
 
-STATIC_URL = "/publisher/static/"
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "assets")
+STATICFILES_DIRS = [ os.path.join(BASE_DIR,'app/static') ]
+
 
 TEMPLATE_DIRS = (os.path.join(BASE_DIR, "app/templates"),)
 
 AUTHENTICATION_BACKENDS = ("django.contrib.auth.backends.ModelBackend",)
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:8000",
+    "http://127.0.0.1:8000",
+]
 
 # Application definition
 
@@ -38,6 +45,7 @@ INSTALLED_APPS = (
     "django.contrib.staticfiles",
 
     "rest_framework",
+    "corsheaders",
 
     "apps.articles",
     "apps.xrpl",
@@ -48,6 +56,7 @@ MIDDLEWARE = (
     "django.middleware.cache.UpdateCacheMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "apps.xrpl.middleware.account.AccountMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
