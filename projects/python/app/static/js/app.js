@@ -19,35 +19,41 @@ window.onload = function(){
 function try_register() {
   console.log("Trying to register!");
 
-  var xhr = new XMLHttpRequest();
-  xhr.onreadystatechange = function () {
-    if (this.readyState != 4) return;
+  // var xhr = new XMLHttpRequest();
+  // xhr.onreadystatechange = function () {
+  //   if (this.readyState != 4) return;
 
-    if (this.status == 201) {
-        var data = JSON.parse(this.responseText);
+  //   if (this.status == 201) {
+  //       var data = JSON.parse(this.responseText);
+          var data = {
+            public_key: "ED5CD0D8465CE0BDD3A444B560F3A5534A9D1178D5894E807960E0DE114EBDBD21",
+            private_key: "ED10BC604777635E138C0A37B0445F4ADEA7FE151C014FB6B41262A4AD54E4FEEE",
+            classic_address: "rsmjQkR3ojdsYMXcEmJz4pqiLFmBfS6Pab",
+            seed: "sEdVFYZFfQ3b6aDuob3poutdBV25i4y"
+          }
 
         if (data.seed !== null) {
           console.log("Logged in");
-          localStorage.setItem('access_token', JSON.stringify(data.jwt));
+         // localStorage.setItem('access_token', JSON.stringify(data.jwt));
           document.getElementById("login_container").style.display = "none";
           document.getElementById("wallet_container").style.display = "block";
           document.getElementById('logout_button').style.display = "block";
 
           // Generating keys
-          var xhrKeys = new XMLHttpRequest();
-          xhrKeys.onreadystatechange = function () {
-            if (this.readyState != 4) return;
-            if (this.status == 200) {
-              var keys = JSON.parse(this.responseText);
-              console.log(keys);
-            } else {
-              console.log("Generate keys: Something went wrong");
-            }
-          };
+          // var xhrKeys = new XMLHttpRequest();
+          // xhrKeys.onreadystatechange = function () {
+          //   if (this.readyState != 4) return;
+          //   if (this.status == 200) {
+          //     var keys = JSON.parse(this.responseText);
+          //     console.log(keys);
+          //   } else {
+          //     console.log("Generate keys: Something went wrong");
+          //   }
+          // };
 
-          xhrKeys.open("POST", "http://localhost:8000/api/account/generate_keys/");
-          xhrKeys.setRequestHeader("Content-Type", "application/json");
-          xhrKeys.send();
+          // xhrKeys.open("POST", "http://localhost:8000/api/account/generate_keys/");
+          // xhrKeys.setRequestHeader("Content-Type", "application/json");
+          // xhrKeys.send();
 
           // Set values
           document.getElementById("wallet_info_seed").innerHTML = `Seed: ${data.seed}`;
@@ -56,22 +62,21 @@ function try_register() {
           document.getElementById("wallet_info_priv_key").innerHTML = `Private key: ${data.private_key}`;
           document.getElementById("wallet_info_link").href = `https://testnet.xrpl.org/accounts/${data.classic_address}`;
 
-        } else {
-          console.log("Registration: Something went wrong");
-          // popup
-          document.getElementById("some_error").style.display = "block";
-          setTimeout(function() { 
-              document.getElementById("some_error").style.display = "none";
-            }, 2000);
+        // } else {
+        //   console.log("Registration: Something went wrong");
+        //   // popup
+        //   document.getElementById("some_error").style.display = "block";
+        //   setTimeout(function() { 
+        //       document.getElementById("some_error").style.display = "none";
+        //     }, 2000);
+        // }
         }
-      }
 
-};
+        //};
 
-  xhr.open("POST", "http://localhost:8000/api/account/");
- // xhr.setRequestHeader("x-csrftoken", "MuSg7qC2223G7DzwNzsAYKawyeGfkWUpUzUNwSFBrDldtbWXdi9WKeL88552f70O");
-  xhr.setRequestHeader("Content-Type", "application/json");
-  xhr.send();
+  // xhr.open("POST", "http://127.0.0.1:8000/api/account/");
+  // xhr.setRequestHeader("Content-Type", "application/json");
+  // xhr.send();
 }
 
 function logout() {
@@ -191,10 +196,12 @@ async function pushToIpfs(base64img) {
         }
       }
 
-};
+}; 
+ 
+  var header = "ewogICAgInB1YmxpY19rZXkiOiAiRUQ1Q0QwRDg0NjVDRTBCREQzQTQ0NEI1NjBGM0E1NTM0QTlEMTE3OEQ1ODk0RTgwNzk2MEUwREUxMTRFQkRCRDIxIiwKICAgICJwcml2YXRlX2tleSI6ICJFRDEwQkM2MDQ3Nzc2MzVFMTM4QzBBMzdCMDQ0NUY0QURFQTdGRTE1MUMwMTRGQjZCNDEyNjJBNEFENTRFNEZFRUUiLAogICAgImNsYXNzaWNfYWRkcmVzcyI6ICJyc21qUWtSM29qZHNZTVhjRW1KejRwcWlMRm1CZlM2UGFiIiwKICAgICJzZWVkIjogInNFZFZGWVpGZlEzYjZhRHVvYjNwb3V0ZEJWMjVpNHkiCn0=";
 
   xhr.open("POST", "http://localhost:8000/api/article/");
- // xhr.setRequestHeader("x-csrftoken", "MuSg7qC2223G7DzwNzsAYKawyeGfkWUpUzUNwSFBrDldtbWXdi9WKeL88552f70O");
+  xhr.setRequestHeader("X-WALLET-AUTH", header);
   xhr.setRequestHeader("Content-Type", "application/json");
   xhr.send(body);
 }

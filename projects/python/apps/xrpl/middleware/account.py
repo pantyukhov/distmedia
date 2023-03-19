@@ -10,6 +10,7 @@ from apps.xrpl.dataclass.account import Account
 
 def get_wallet(request) -> Optional[Account]:
     data = request.META.get('HTTP_X_WALLET_AUTH', None)
+    print(data)
     if not data:
         return data
 
