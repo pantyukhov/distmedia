@@ -8,7 +8,7 @@ import xrpl
 from django.conf import settings
 from xrpl.clients import JsonRpcClient, WebsocketClient
 from xrpl.models import AccountNFTs, NFTokenCreateOffer, NFTBuyOffers, NFTokenAcceptOffer, \
-    NFTokenMint, NFTokenMintFlag, Subscribe, StreamParameter, Payment
+    NFTokenMint, NFTokenMintFlag, Subscribe, StreamParameter, Payment, NFTSellOffers
 from xrpl.transaction import safe_sign_and_autofill_transaction, send_reliable_submission
 from xrpl.utils import xrp_to_drops
 from xrpl.wallet import generate_faucet_wallet, Wallet
@@ -106,7 +106,6 @@ class XrplService:
         get_account_nfts = self.client.request(AccountNFTs(account=issuerAddr, limit=100))
         return get_account_nfts.result['account_nfts']
 
-
     def read_nft_content(self, nft):
         uri = nft.get('URI')
         if uri:
@@ -122,7 +121,7 @@ class XrplService:
             response = requests.post(f'{self.ipfs_url}/api/v0/get', params=params, timeout=10)
             if response.status_code != 200:
                 return None
-            text =response.text[response.text.index("{"):response.text.rindex("}")+1]
+            text = response.text[response.text.index("{"):response.text.rindex("}") + 1]
 
             data = json.loads(text)
             # data = {
@@ -130,7 +129,7 @@ class XrplService:
             #     "description": "Test",
             #     "content": test_image,
             # }
-            data["hash"] =h
+            data["hash"] = h
             data["token"] = nft
 
             return data
@@ -146,9 +145,8 @@ class XrplService:
         response = response.result['account_nfts']
         return response
 
-
     def purchase_article(self, account: Account, original_nft_id):
-        #Get issuer wallet and address
+        # Get issuer wallet and address
         issuer_wallet = super_user_xrpl_service.get_superuser_waller()
         issuerAddr = issuer_wallet.classic_address
 
@@ -175,16 +173,44 @@ class XrplService:
         buyer_wallet = account.get_wallet()
         buyerAddr = buyer_wallet.classic_address
 
-        response = self.client.request(issuer_wallet)
-        response = response.result['account_nfts'][0]
+        response = self.get_nfts(issuer_wallet.classic_address)
+        response = [x for x in self.get_nfts(issuer_wallet.classic_address) if
+                    x.get("URI", "") == mint_tx_signed.result.get("URI") and x.get(
+                        'Issuer') == issuer_wallet.classic_address][0]
 
         nfTokeID = response['NFTokenID']
         buy_tx = NFTokenCreateOffer(
             account=issuerAddr,
-            destination=buyerAddr,
+            owner=buyerAddr,
             nftoken_id=nfTokeID,
-            amount=str(USER_SUBSCRIPTION_DROPS),  # 10 XRP in drops, 1 XRP = 1,000,000 drops
+            amount=str(1000),  # 10 XRP in drops, 1 XRP = 1,000,000 drops
         )
+
+        # Sign buy_tx using the issuer account
+
+        buy_tx_signed = safe_sign_and_autofill_transaction(transaction=buy_tx, wallet=issuer_wallet, client=self.client)
+        buy_tx_signed = send_reliable_submission(transaction=buy_tx_signed, client=self.client)
+        buy_tx_result = buy_tx_signed.result
+
+        # accept offer
+
+        # Query buy offers for the NFT
+        response_offers = self.client.request(
+            NFTSellOffers(nft_id=response['NFTokenID'])
+        )
+        offer_objects = response_offers.result
+
+        for first_offer_object in offer_objects["offers"]:
+            accept_sell_offer_tx = NFTokenAcceptOffer(
+                account=first_offer_object["owner"],
+                nftoken_buy_offer=first_offer_object["nft_offer_index"]
+            )
+            accept_sell_offer_tx_signed = safe_sign_and_autofill_transaction(transaction=accept_sell_offer_tx,
+                                                                             wallet=buyer_wallet,
+                                                                             client=self.client)
+            accept_sell_offer_tx_signed = send_reliable_submission(transaction=accept_sell_offer_tx_signed,
+                                                                   client=self.client)
+            accept_sell_offer_tx_result = accept_sell_offer_tx_signed.result
 
         # print(nft_id)
         return {}
