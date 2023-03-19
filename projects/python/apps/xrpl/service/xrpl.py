@@ -119,17 +119,17 @@ class XrplService:
                 'arg': h,
             }
 
-            # response = requests.post(f'{self.ipfs_url}/api/v0/get', params=params, timeout=10)
-            # if response.status_code != 200:
-            #     return None
-            # text =response.text[response.text.index("{"):response.text.rindex("}")+1]
-            #
-            # data = json.loads(text)
-            data = {
-                "title": "Test",
-                "description": "Test",
-                "content": test_image,
-            }
+            response = requests.post(f'{self.ipfs_url}/api/v0/get', params=params, timeout=10)
+            if response.status_code != 200:
+                return None
+            text =response.text[response.text.index("{"):response.text.rindex("}")+1]
+
+            data = json.loads(text)
+            # data = {
+            #     "title": "Test",
+            #     "description": "Test",
+            #     "content": test_image,
+            # }
             data["hash"] =h
             data["token"] = nft
 
@@ -148,6 +148,7 @@ class XrplService:
 
     def purchase_article(self, account: Account, nft_id):
         print(nft_id)
+        return {}
 
     def upload_content(self, account: Account, content):
         ipfs_address = self.ipfs_client.add_str(content)

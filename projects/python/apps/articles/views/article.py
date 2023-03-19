@@ -56,6 +56,6 @@ class ArticleViewSet(CreateModelMixin, viewsets.ViewSet):
         serializer = PurchaseArticle(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        data = xrpl_service.purchase_article(request.account_wallet, serializer.validated_data["nft_id"])
+        data = xrpl_service.purchase_article(request.account_wallet, serializer.validated_data.nft_id)
 
         return Response(data)
