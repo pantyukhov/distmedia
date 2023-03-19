@@ -193,3 +193,27 @@
 02:16:29.616063 db@janitor removing table-43
 02:16:29.623681 db@janitor removing table-44
 02:16:29.632169 db@open done T·295.6275ms
+=============== Mar 19, 2023 (UTC) ===============
+06:52:19.066393 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+06:52:19.091906 version@stat F·[2 1] S·39KiB[19KiB 19KiB] Sc·[0.50 0.00]
+06:52:19.093542 db@open opening
+06:52:19.099334 journal@recovery F·1
+06:52:19.105088 journal@recovery recovering @49
+06:52:19.189445 memdb@flush created L0@50 N·274 S·29KiB "/F5..G5Y,v331":"/pr..ZXO,v553"
+06:52:19.198724 version@stat F·[3 1] S·69KiB[49KiB 19KiB] Sc·[0.75 0.00]
+06:52:19.270240 db@janitor table missing @21
+06:52:19.271266 db@janitor table missing @20
+06:52:19.271987 db@janitor table missing @24
+=============== Mar 19, 2023 (UTC) ===============
+06:52:19.295028 log@legend F·NumFile S·FileSize N·Entry C·BadEntry B·BadBlock Ke·KeyError D·DroppedEntry L·Level Q·SeqNum T·TimeElapsed
+06:52:19.304990 table@recovery F·1
+06:52:19.307198 table@recovery recovering @50
+06:52:19.336162 table@recovery recovered @50 Gk·274 Ck·0 Cb·0 S·30658 Q·603
+06:52:19.340446 table@recovery recovered F·1 N·274 Gk·274 Ck·0 Q·603
+06:52:19.377336 version@stat F·[1] S·29KiB[29KiB] Sc·[0.25]
+06:52:19.382660 db@open opening
+06:52:19.387973 journal@recovery F·1
+06:52:19.389322 journal@recovery recovering @51
+06:52:19.407687 version@stat F·[1] S·29KiB[29KiB] Sc·[0.25]
+06:52:19.458725 db@janitor F·4 G·0
+06:52:19.470888 db@open done T·85.8671ms
